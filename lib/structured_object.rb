@@ -24,6 +24,8 @@ require 'ostruct'
 # For more information, see the OpenStruct documentation
 
 class StructuredObject < OpenStruct
+  VERSION = '0.0.1'
+
   def new_ostruct_member(name)
     name = name.to_sym
     unless self.respond_to?(name)
