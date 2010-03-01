@@ -2,7 +2,6 @@ $:.unshift File.expand_path("../lib", __FILE__)
 
 require 'rubygems'
 require 'lib/structured_object'
-require 'rake/testtask'
 require 'rake/gempackagetask'
  
 lib_dir = File.expand_path('lib')
@@ -17,7 +16,6 @@ gem_spec = Gem::Specification.new do |s|
   s.summary = "A subclass of OpenStruct to allow nested elements"
   s.authors = ["Samuel Mullen"]
   s.email = "samullen@gmail.com"
-  s.test_files = Dir['test/**/*.rb']
   s.description = false
   s.files = [
     "LICENSE",
@@ -29,10 +27,19 @@ gem_spec = Gem::Specification.new do |s|
   ] + s.test_files
 end
 
-Rake::TestTask.new(:test) do |test|
-  test.libs = [lib_dir, test_dir]
-  test.pattern = 'test/**/*rb'
-  test.verbose = true
+begin
+  require 'spec/rake/spectask'
+rescue LoadError
+  task :spec do
+    $stderr.puts '`gem install rspec` to run specs'
+  end
+else
+  desc "Run specs"
+  Spec::Rake::SpecTask.new do |t|
+    t.spec_files = FileList['spec/**/*_spec.rb']
+    t.spec_opts  = %w(-fs --color)
+    t.warning    = true
+  end
 end
 
 Rake::GemPackageTask.new(gem_spec) do |pkg|
@@ -41,11 +48,11 @@ Rake::GemPackageTask.new(gem_spec) do |pkg|
 end
 
 desc "Install the gem locally"
-task :install => [:test, :gem] do
+task :install => [:spec, :gem] do
   sh %{gem install pkg/#{gem_spec.name}-#{gem_spec.version}}
 end
 
 desc "Remove the pkg directory and all of its contents."
 task :clean => :clobber_package
 
-task :default => [:test, :gem]
+task :default => [:spec, :gem]
