@@ -24,14 +24,15 @@ require 'ostruct'
 # For more information, see the OpenStruct documentation
 
 class StructuredObject < OpenStruct
-  VERSION = '0.0.1'
+  VERSION = '0.0.2'
 
   def new_ostruct_member(name)
     name = name.to_sym
     unless self.respond_to?(name)
       class << self; self; end.class_eval do
         define_method(name) do 
-          if @table[name].instance_of? Hash
+          case @table[name]
+          when Hash
             StructuredObject.new(@table[name])
           else
             @table[name]
