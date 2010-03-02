@@ -44,5 +44,4 @@ The StructuredObject project is hosted on github at http://github.com/samullen/s
 
 == Copyright
 
-Copyright(c) 2009 Samuel Mullen (samullen). See LICENSE for details
-
+Copyright(c) 2010 Samuel Mullen (samullen). See LICENSE for details
