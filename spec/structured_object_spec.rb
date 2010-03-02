@@ -49,4 +49,17 @@ describe StructuredObject do
     @so.database.dump.should be_an_instance_of Hash
     @so.favorite_sites.should be_an_instance_of Array
   end
+
+  it "should implement enumerable's methods" do
+#     @so.favorite_sites.each {|i| puts i}
+#     puts @so.favorite_sites.grep /google/
+#     puts @so.database.db_name.each {|x| puts x}
+  end
+
+  it "should accurately check for equality" do
+    new_so = StructuredObject.new(@yaml)
+    @so.should == new_so
+    @so.database.should == new_so.database
+    @so.favorite_sites.should == new_so.favorite_sites
+  end
 end
