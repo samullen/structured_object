@@ -24,9 +24,9 @@ require 'ostruct'
 # For more information, see the OpenStruct documentation
 
 class StructuredObject < OpenStruct
-  include Enumerable
+  include Enumerable, Comparable
 
-  VERSION = '0.0.3'
+  VERSION = '0.0.4'
 
   def new_ostruct_member(name)
     name = name.to_sym
@@ -49,21 +49,30 @@ class StructuredObject < OpenStruct
   # structure
   alias dump marshal_dump
 
+  # each: performs an 'each' iteration appropriate to the node (Hash, Array,
+  # etc.)
   def each
-    struct = self.dump
-
 #     raise unless struct.include? Enumerable
 
-    case struct
+    case @table
     when Hash
-      struct.each {|k,v| yield k,v }
+      @table.each {|k,v| yield k,v }
     else
-      struct.each {|i| yield i}
+      @table.each {|i| yield i}
     end
   end
 
   def ==(other)
     return false unless(other.kind_of?(StructuredObject))
     return @table == other.table
+  end
+
+  def <=>(other)
+    other_table = other.dump
+
+    raise NoMethodError, "Object to be compared against must be of type StructuredObject" unless other.kind_of? StructuredObject
+    raise RuntimeError, "Node and Object to be compared against must resolve to 'Comparable' objects." unless @table.class.include?(Comparable) && other_table.class.include?(Comparable)
+
+    return @table <=> other_table
   end
 end

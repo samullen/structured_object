@@ -61,5 +61,7 @@ describe StructuredObject do
     @so.should == new_so
     @so.database.should == new_so.database
     @so.favorite_sites.should == new_so.favorite_sites
+    lambda { @so <=> "foo" }.should raise_error(NoMethodError)
+    lambda { @so <=> new_so }.should raise_error(RuntimeError)
   end
 end
