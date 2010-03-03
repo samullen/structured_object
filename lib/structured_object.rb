@@ -51,15 +51,10 @@ class StructuredObject < OpenStruct
 
   # each: performs an 'each' iteration appropriate to the node (Hash, Array,
   # etc.)
-  def each
-#     raise unless struct.include? Enumerable
+  def each(&block)
+    raise unless @table.respond_to?("each")
 
-    case @table
-    when Hash
-      @table.each {|k,v| yield k,v }
-    else
-      @table.each {|i| yield i}
-    end
+    @table.each &block
   end
 
   def ==(other)
@@ -75,4 +70,9 @@ class StructuredObject < OpenStruct
 
     return @table <=> other_table
   end
+
+#   def method_missing
+# if dumped class has the method, use that. Otherwise,
+# super
+#   end
 end

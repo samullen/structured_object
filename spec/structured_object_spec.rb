@@ -48,12 +48,14 @@ describe StructuredObject do
     @so.dump.should be_an_instance_of Hash
     @so.database.dump.should be_an_instance_of Hash
     @so.favorite_sites.should be_an_instance_of Array
+    @so.favorite_sites.first.should be_an_instance_of String
   end
 
   it "should implement enumerable's methods" do
-#     @so.favorite_sites.each {|i| puts i}
-#     puts @so.favorite_sites.grep /google/
-#     puts @so.database.db_name.each {|x| puts x}
+    lambda { @so.database.db_name.each }.should raise_error(NoMethodError)
+    @so.favorite_sites.each.should be_an_instance_of Enumerator
+    @so.each.should be_an_instance_of Enumerator
+    @so.favorite_sites.collect {|x| x}.should == @yaml["favorite_sites"]
   end
 
   it "should accurately check for equality" do
@@ -63,5 +65,6 @@ describe StructuredObject do
     @so.favorite_sites.should == new_so.favorite_sites
     lambda { @so <=> "foo" }.should raise_error(NoMethodError)
     lambda { @so <=> new_so }.should raise_error(RuntimeError)
+    @so.database.db_name.should < "zzz"
   end
 end
