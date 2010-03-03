@@ -26,7 +26,7 @@ require 'ostruct'
 class StructuredObject < OpenStruct
   include Enumerable, Comparable
 
-  VERSION = '0.0.4'
+  VERSION = '0.0.6'
 
   def new_ostruct_member(name)
     name = name.to_sym
@@ -71,8 +71,11 @@ class StructuredObject < OpenStruct
     return @table <=> other_table
   end
 
-#   def method_missing
-# if dumped class has the method, use that. Otherwise,
-# super
-#   end
+  def method_missing(id, *args)
+    if @table.respond_to?(id.to_s)
+      @table.send(id.to_s, *args)
+    else
+      super id, *args
+    end
+  end
 end

@@ -67,4 +67,9 @@ describe StructuredObject do
     lambda { @so <=> new_so }.should raise_error(RuntimeError)
     @so.database.db_name.should < "zzz"
   end
+
+  it "should try to call missing methods on the super class first" do
+    @so.keys = [:a, :b, :c]
+    puts @so.keys
+  end
 end
