@@ -24,9 +24,8 @@ require 'ostruct'
 # For more information, see the OpenStruct documentation
 
 class StructuredObject < OpenStruct
-  include Enumerable, Comparable
 
-  VERSION = '0.0.6'
+  VERSION = '0.0.7'
 
   def new_ostruct_member(name)
     name = name.to_sym
@@ -36,6 +35,8 @@ class StructuredObject < OpenStruct
           case @table[name]
           when Hash
             StructuredObject.new(@table[name])
+#           when Array
+#             @table[name].collect! {|e| StructuredObject.new(e) }
           else
             @table[name]
           end
@@ -48,14 +49,6 @@ class StructuredObject < OpenStruct
   # dump: alias of the mashal_dump method in OpenStruct, returns the raw data
   # structure
   alias dump marshal_dump
-
-  # each: performs an 'each' iteration appropriate to the node (Hash, Array,
-  # etc.)
-  def each(&block)
-    raise unless @table.respond_to?("each")
-
-    @table.each &block
-  end
 
   def ==(other)
     return false unless(other.kind_of?(StructuredObject))

@@ -41,10 +41,9 @@ describe StructuredObject do
     @so.bar.should be_an_instance_of Array
     @so.bar.eql?(array).should be_true
     @so.bar.first.should be 0
-#     StructuredObject.new.should be_false
   end
 
-  it "should return the correct structured when dumped" do
+  it "should return the correct structure when dumped" do
     @so.dump.should be_an_instance_of Hash
     @so.database.dump.should be_an_instance_of Hash
     @so.favorite_sites.should be_an_instance_of Array
@@ -69,7 +68,10 @@ describe StructuredObject do
   end
 
   it "should try to call missing methods on the super class first" do
-    @so.keys = [:a, :b, :c]
-    puts @so.keys
+# puts @so.database.db_name > "xxx"
+#     @so.keys = [:a, :b, :c]
+#     puts @so.keys
+#     @so.merge!({:host => "172.0.0.1", :domain => "phalanxit.com"})
+# puts    @so.dump.keys
   end
 end
