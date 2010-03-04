@@ -50,6 +50,8 @@ class StructuredObject < OpenStruct
   # structure
   alias dump marshal_dump
 
+# need to disallow certain values from being added (ie each, keys, etc)
+
   def ==(other)
     return false unless(other.kind_of?(StructuredObject))
     return @table == other.table
